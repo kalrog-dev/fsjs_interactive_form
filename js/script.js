@@ -154,15 +154,34 @@ watchInput();
 function watchInput() {
   const name = document.getElementById("name");
   const email = document.getElementById("email");
-  const activities = document.getElementById("activities");
   const cardNum = document.getElementById("cc-num");
   const zip = document.getElementById("zip");
   const cvv = document.getElementById("cvv");
+  const activities = document.getElementById("activities");
 
   name.addEventListener("input", validator.isValidName);
   email.addEventListener("input", validator.isValidEmail);
-  activities.addEventListener("change", validator.isValidActivity);
   cardNum.addEventListener("input", validator.isValidNum);
   zip.addEventListener("input", validator.isValidZip);
   cvv.addEventListener("input", validator.isValidCvv);
+  activities.addEventListener("change", activityChangeHandler);
+}
+
+function activityChangeHandler(event) {
+  validator.isValidActivity();
+
+  // Disable activities with conflicting times
+  const target = event.target.closest('input[type="checkbox"]')
+  const targetTime = target.dataset.dayAndTime;
+  [...checkboxes]
+    .filter(checkbox => targetTime === checkbox.dataset.dayAndTime && target !== checkbox)
+    .forEach(checkbox => {
+      if (target.checked) {
+        checkbox.setAttribute("disabled", "")
+        checkbox.closest("label").classList.add("disabled");
+      } else {
+        checkbox.removeAttribute("disabled")
+        checkbox.closest("label").classList.remove("disabled");
+      }
+    })
 }
