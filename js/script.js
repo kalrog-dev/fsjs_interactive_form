@@ -35,3 +35,16 @@ function updateTotal(event) {
   const currentTotal = Number(activitiesCost.textContent.match(/\d+/)[0]);
   activitiesCost.textContent = `Total: $${currentTotal + difference}`;
 }
+
+// Payment selection
+const selectPayment = document.getElementById("payment");
+selectPayment.value = "credit-card";
+updatePayment();
+selectPayment.addEventListener("change", updatePayment);
+
+function updatePayment() {
+  const methods = document.querySelectorAll(".payment-methods > div:not(.payment-method-box)");
+  methods.forEach(method => {
+    method.style.display = method.id === selectPayment.value ? "inherit" : "none";
+  });
+}
