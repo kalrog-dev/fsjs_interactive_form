@@ -55,44 +55,39 @@ function updatePayment() {
 const form = document.querySelector("form");
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (isValidForm()) {
-    console.log("valid");
-  } else {
-    console.log(`Name: ${isValidName()}, Email: ${isValidEmail()}, Activity: ${isValidActivity()}, Card: ${isValidCard()}`);
-  }
+  validator.isValidAll() && form.submit();
+  console.log(`Name: ${validator.isValidName()}, Email: ${validator.isValidEmail()}, Activity: ${validator.isValidActivity()}, Card: ${validator.isValidCard()}`);
 });
 
-function isValidForm() {
-  return isValidName() && isValidEmail() && isValidActivity() && isValidCard();
-}
-
-function isValidName() {
-  // Only letters and whitespaces, must contain letters
-  return regexTestElementsValue('input[type="text"]', /^(?=.*[a-z])[a-z\s]*$/i);
-}
-
-function isValidEmail() {
-  return regexTestElementsValue("#email", /^[^@]+@[^@]+\.[a-z]+$/i);
-}
-
-function isValidActivity() {
-  // At least one activity must be selected
-  const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
-  return activityFields.some(activity => activity.checked);
-}
-
-function isValidCard() {
-  // Return is valid if credit card is not the selected method
-  if (selectPayment.value !== "credit-card") {
-    return true;
+const validator = {
+  isValidAll() {
+    return this.isValidName() && this.isValidEmail() && this.isValidActivity() && this.isValidCard();
+  },
+  isValidName() {
+    // Only letters and whitespaces, must contain letters
+    return regexTestElementsValue('input[type="text"]', /^(?=.*[a-z])[a-z\s]*$/i);
+  },
+  isValidEmail() {
+    return regexTestElementsValue("#email", /^[^@]+@[^@]+\.[a-z]+$/i);
+  },
+  isValidActivity() {
+    // At least one activity must be selected
+    const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
+    return activityFields.some(activity => activity.checked);
+  },
+  isValidCard() {
+    // Return is valid if credit card is not the selected method
+    if (selectPayment.value !== "credit-card") {
+      return true;
+    }
+    // Credit card validation
+    else {
+      return regexTestElementsValue("#cc-num", /^\d{13,16}$/)
+          && regexTestElementsValue("#zip", /^\d{5}$/)
+          && regexTestElementsValue("#cvv", /^\d{3}$/);
+    }
   }
-  // Credit card validation
-  else {
-    return regexTestElementsValue("#cc-num", /^\d{13,16}$/)
-        && regexTestElementsValue("#zip", /^\d{5}$/)
-        && regexTestElementsValue("#cvv", /^\d{3}$/);
-  }
-}
+};
 
 function regexTestElementsValue(selector, regex) {
   const element = document.querySelector(selector);
