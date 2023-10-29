@@ -94,3 +94,18 @@ function regexTestElementsValue(selector, regex) {
   const str = element.value;
   return regex.test(str);
 }
+
+// Checkbox focus state
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+checkboxes.forEach(checkbox => {
+  checkbox.addEventListener("focus", checkboxFocusHandler);
+  checkbox.addEventListener("blur", checkboxBlurHandler);
+});
+
+function checkboxFocusHandler(event) {
+  event.target.closest("label").classList.add("focus");
+}
+
+function checkboxBlurHandler(event) {
+  event.target.closest("label").classList.remove("focus");
+}
