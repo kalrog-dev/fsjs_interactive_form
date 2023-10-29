@@ -24,3 +24,14 @@ selectDesign.addEventListener("change", () => {
     option.dataset.theme !== selectDesign.value ? option.setAttribute("hidden", "") : option.removeAttribute("hidden")
   });
 });
+
+// Update activities' cost
+document.getElementById("activities").addEventListener("change", updateTotal);
+function updateTotal(event) {
+  const checkbox = event.target.closest('input[type="checkbox"]');
+  const multiplier = checkbox.checked ? 1 : -1;
+  const difference = multiplier * Number(checkbox.dataset.cost);
+  const activitiesCost = document.getElementById("activities-cost");
+  const currentTotal = Number(activitiesCost.textContent.match(/\d+/)[0]);
+  activitiesCost.textContent = `Total: $${currentTotal + difference}`;
+}
