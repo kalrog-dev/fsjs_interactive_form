@@ -53,7 +53,7 @@ function updatePayment() {
 
 // Form validation
 const form = document.querySelector("form");
-form.addEventListener("input", (event) => {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
   validator.isValidAll() && form.submit();
   console.log(`Name: ${validator.isValidName()}, Email: ${validator.isValidEmail()}, Activity: ${validator.isValidActivity()}, Card: ${validator.isValidCard()}`);
@@ -83,7 +83,6 @@ const validator = {
     const isValid = activityFields.some(activity => activity.checked);
     visualValidation(isValid, selector, "fieldset", selector + " ~ .hint");
     return isValid;
-
   },
   isValidCard() {
     // Return is valid if credit card is not the selected method
@@ -92,22 +91,26 @@ const validator = {
     }
     // Credit card validation
     else {
-      // Card number
-      const selectorNum = "#cc-num";
-      const isValidNum = regexTestElementsValue("#cc-num", /^\d{13,16}$/);
-      visualValidation(isValidNum, selectorNum, "label", selectorNum + " ~ .hint");
-
-      // Zip
-      const selectorZip = "#zip";
-      const isValidZip = regexTestElementsValue("#zip", /^\d{5}$/);
-      visualValidation(isValidZip, selectorZip, "label", selectorZip + " ~ .hint");
-
-      // CVV
-      const selectorCvv = "#cvv";
-      const isValidCvv = regexTestElementsValue("#cvv", /^\d{3}$/);
-      visualValidation(isValidCvv, selectorCvv, "label", selectorCvv + " ~ .hint");
-      return isValidNum && isValidZip && isValidCvv;
+      return isValidNum() && isValidZip() && isValidCvv();
     }
+  },
+  isValidNum() {
+    const selector = "#cc-num";
+    const isValid = regexTestElementsValue("#cc-num", /^\d{13,16}$/);
+    visualValidation(isValid, selector, "label", selector + " ~ .hint");
+    return isValid;
+  },
+  isValidZip() {
+    const selector = "#zip";
+    const isValid = regexTestElementsValue("#zip", /^\d{5}$/);
+    visualValidation(isValid, selector, "label", selector + " ~ .hint");
+    return isValid;
+  },
+  isValidCvv() {
+    const selector = "#cvv";
+    const isValid = regexTestElementsValue("#cvv", /^\d{3}$/);
+    visualValidation(isValid, selector, "label", selector + " ~ .hint");
+    return isValid;
   }
 };
 
@@ -144,4 +147,22 @@ function checkboxFocusHandler(event) {
 
 function checkboxBlurHandler(event) {
   event.target.closest("label").classList.remove("focus");
+}
+
+// Real-time error messages
+watchInput();
+function watchInput() {
+  const name = document.getElementById("name");
+  const email = document.getElementById("email");
+  const activities = document.getElementById("activities");
+  const cardNum = document.getElementById("cc-num");
+  const zip = document.getElementById("zip");
+  const cvv = document.getElementById("cvv");
+
+  name.addEventListener("input", validator.isValidName);
+  email.addEventListener("input", validator.isValidEmail);
+  activities.addEventListener("change", validator.isValidActivity);
+  cardNum.addEventListener("input", validator.isValidNum);
+  zip.addEventListener("input", validator.isValidZip);
+  cvv.addEventListener("input", validator.isValidCvv);
 }
