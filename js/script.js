@@ -53,7 +53,7 @@ function updatePayment() {
 
 // Form validation
 const form = document.querySelector("form");
-form.addEventListener("submit", (event) => {
+form.addEventListener("input", (event) => {
   event.preventDefault();
   validator.isValidAll() && form.submit();
   console.log(`Name: ${validator.isValidName()}, Email: ${validator.isValidEmail()}, Activity: ${validator.isValidActivity()}, Card: ${validator.isValidCard()}`);
@@ -65,15 +65,25 @@ const validator = {
   },
   isValidName() {
     // Only letters and whitespaces, must contain letters
-    return regexTestElementsValue('input[type="text"]', /^(?=.*[a-z])[a-z\s]*$/i);
+    const selector = 'input[type="text"]';
+    const isValid = regexTestElementsValue(selector, /^(?=.*[a-z])[a-z\s]*$/i);
+    visualValidation(isValid, selector, "label", selector + " ~ .hint");
+    return isValid;
   },
   isValidEmail() {
-    return regexTestElementsValue("#email", /^[^@]+@[^@]+\.[a-z]+$/i);
+    const selector = "#email";
+    const isValid = regexTestElementsValue(selector, /^[^@]+@[^@]+\.[a-z]+$/i);
+    visualValidation(isValid, selector, "label", selector + " ~ .hint");
+    return isValid;
   },
   isValidActivity() {
     // At least one activity must be selected
+    const selector = "#activities-box"
     const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
-    return activityFields.some(activity => activity.checked);
+    const isValid = activityFields.some(activity => activity.checked);
+    visualValidation(isValid, selector, "fieldset", selector + " ~ .hint");
+    return isValid;
+
   },
   isValidCard() {
     // Return is valid if credit card is not the selected method
@@ -82,9 +92,21 @@ const validator = {
     }
     // Credit card validation
     else {
-      return regexTestElementsValue("#cc-num", /^\d{13,16}$/)
-          && regexTestElementsValue("#zip", /^\d{5}$/)
-          && regexTestElementsValue("#cvv", /^\d{3}$/);
+      // Card number
+      const selectorNum = "#cc-num";
+      const isValidNum = regexTestElementsValue("#cc-num", /^\d{13,16}$/);
+      visualValidation(isValidNum, selectorNum, "label", selectorNum + " ~ .hint");
+
+      // Zip
+      const selectorZip = "#zip";
+      const isValidZip = regexTestElementsValue("#zip", /^\d{5}$/);
+      visualValidation(isValidZip, selectorZip, "label", selectorZip + " ~ .hint");
+
+      // CVV
+      const selectorCvv = "#cvv";
+      const isValidCvv = regexTestElementsValue("#cvv", /^\d{3}$/);
+      visualValidation(isValidCvv, selectorCvv, "label", selectorCvv + " ~ .hint");
+      return isValidNum && isValidZip && isValidCvv;
     }
   }
 };
@@ -93,6 +115,20 @@ function regexTestElementsValue(selector, regex) {
   const element = document.querySelector(selector);
   const str = element.value;
   return regex.test(str);
+}
+
+function visualValidation(isValid, targetSelector, closestParentSelector, hintSelector) {
+  const parent = document.querySelector(targetSelector).closest(closestParentSelector);
+  const hint = document.querySelector(hintSelector);
+  if (!isValid) {
+    parent.classList.add("not-valid");
+    parent.classList.remove("valid");
+    hint.style.display = "inherit";
+  } else {
+    parent.classList.add("valid");
+    parent.classList.remove("not-valid");
+    hint.style.display = "none";
+  }
 }
 
 // Checkbox focus state
