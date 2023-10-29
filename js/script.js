@@ -60,25 +60,16 @@ form.addEventListener("submit", (event) => {
 
 const validator = {
   isValidAll() {
-    const isValid = this.name.isValidName() && this.email.isValidEmail() && this.activities.isValidActivity() && this.isValidCard();
-    // Show errors
-    this.name.isValidName();
-    this.email.isValidEmail();
-    this.activities.isValidActivity();
-    this.cardNum.isValidNum();
-    this.zip.isValidZip();
-    this.cvv.isValidCvv();
-    return isValid;
-  },
-  isValidCard() {
-    // Return is valid if credit card is not the selected method
-    if (selectPayment.value !== "credit-card") {
-      return true;
-    }
-    // Credit card validation
-    else {
-      return this.cardNum.isValidNum() && this.zip.isValidZip() && this.cvv.isValidCvv();
-    }
+    // Test required fields and show visual clues
+    const validation = [
+      this.name.isValidName(),
+      this.email.isValidEmail(),
+      this.activities.isValidActivity(),
+      this.cardNum.isValidNum(),
+      this.zip.isValidZip(),
+      this.cvv.isValidCvv(),
+    ];
+    return validation.every(isValidTestResult => isValidTestResult === true);
   },
   name: {
     event: "input",
@@ -117,6 +108,10 @@ const validator = {
       validator.cardNum.isValidNum()
     },
     isValidNum() {
+      // Return is valid if credit card is not the selected method
+      if (selectPayment.value !== "credit-card") {
+        return true;
+      }
       const selector = "#cc-num";
       const isValid = regexTestElementsValue("#cc-num", /^\d{13,16}$/);
       visualValidation(isValid, selector, "label", selector + " ~ .hint");
@@ -132,6 +127,10 @@ const validator = {
       validator.zip.isValidZip()
     },
     isValidZip() {
+      // Return is valid if credit card is not the selected method
+      if (selectPayment.value !== "credit-card") {
+        return true;
+      }
       const selector = "#zip";
       const isValid = regexTestElementsValue("#zip", /^\d{5}$/);
       visualValidation(isValid, selector, "label", selector + " ~ .hint");
@@ -147,6 +146,10 @@ const validator = {
       validator.cvv.isValidCvv()
     },
     isValidCvv() {
+      // Return is valid if credit card is not the selected method
+      if (selectPayment.value !== "credit-card") {
+        return true;
+      }
       const selector = "#cvv";
       const isValid = regexTestElementsValue("#cvv", /^\d{3}$/);
       visualValidation(isValid, selector, "label", selector + " ~ .hint");
@@ -172,7 +175,15 @@ const validator = {
     getElement() {
       return document.getElementById("activities");
     }
-  }
+  },
+  requiredFields: [
+    this.name,
+    this.email,
+    this.cardNum,
+    this.zip,
+    this.cvv,
+    this.activities,
+  ],
 };
 
 function regexTestElementsValue(selector, regex) {
