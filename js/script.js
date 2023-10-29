@@ -60,27 +60,14 @@ form.addEventListener("submit", (event) => {
 
 const validator = {
   isValidAll() {
-    return this.isValidName() && this.isValidEmail() && this.isValidActivity() && this.isValidCard();
-  },
-  isValidName() {
-    // Only letters and whitespaces, must contain letters
-    const selector = 'input[type="text"]';
-    const isValid = regexTestElementsValue(selector, /^(?=.*[a-z])[a-z\s]*$/i);
-    visualValidation(isValid, selector, "label", selector + " ~ .hint");
-    return isValid;
-  },
-  isValidEmail() {
-    const selector = "#email";
-    const isValid = regexTestElementsValue(selector, /^[^@]+@[^@]+\.[a-z]+$/i);
-    visualValidation(isValid, selector, "label", selector + " ~ .hint");
-    return isValid;
-  },
-  isValidActivity() {
-    // At least one activity must be selected
-    const selector = "#activities-box"
-    const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
-    const isValid = activityFields.some(activity => activity.checked);
-    visualValidation(isValid, selector, "fieldset", selector + " ~ .hint");
+    const isValid = this.name.isValidName() && this.email.isValidEmail() && this.activities.isValidActivity() && this.isValidCard();
+    // Show errors
+    this.name.isValidName();
+    this.email.isValidEmail();
+    this.activities.isValidActivity();
+    this.cardNum.isValidNum();
+    this.zip.isValidZip();
+    this.cvv.isValidCvv();
     return isValid;
   },
   isValidCard() {
@@ -90,31 +77,20 @@ const validator = {
     }
     // Credit card validation
     else {
-      return isValidNum() && isValidZip() && isValidCvv();
+      return this.cardNum.isValidNum() && this.zip.isValidZip() && this.cvv.isValidCvv();
     }
-  },
-  isValidNum() {
-    const selector = "#cc-num";
-    const isValid = regexTestElementsValue("#cc-num", /^\d{13,16}$/);
-    visualValidation(isValid, selector, "label", selector + " ~ .hint");
-    return isValid;
-  },
-  isValidZip() {
-    const selector = "#zip";
-    const isValid = regexTestElementsValue("#zip", /^\d{5}$/);
-    visualValidation(isValid, selector, "label", selector + " ~ .hint");
-    return isValid;
-  },
-  isValidCvv() {
-    const selector = "#cvv";
-    const isValid = regexTestElementsValue("#cvv", /^\d{3}$/);
-    visualValidation(isValid, selector, "label", selector + " ~ .hint");
-    return isValid;
   },
   name: {
     event: "input",
     callback() {
-      validator.isValidName()
+      validator.name.isValidName()
+    },
+    isValidName() {
+      // Only letters and whitespaces, must contain letters
+      const selector = 'input[type="text"]';
+      const isValid = regexTestElementsValue(selector, /^(?=.*[a-z])[a-z\s]*$/i);
+      visualValidation(isValid, selector, "label", selector + " ~ .hint");
+      return isValid;
     },
     getElement() {
       return document.getElementById("name");
@@ -123,47 +99,79 @@ const validator = {
   email: {
     event: "input",
     callback() {
-      validator.isValidEmail()
+      validator.email.isValidEmail()
+    },
+    isValidEmail() {
+      const selector = "#email";
+      const isValid = regexTestElementsValue(selector, /^[^@]+@[^@]+\.[a-z]+$/i);
+      visualValidation(isValid, selector, "label", selector + " ~ .hint");
+      return isValid;
     },
     getElement() {
       return document.getElementById("email");
-    } 
+    }
   },
   cardNum: {
     event: "input",
     callback() {
-      validator.isValidNum()
+      validator.cardNum.isValidNum()
+    },
+    isValidNum() {
+      const selector = "#cc-num";
+      const isValid = regexTestElementsValue("#cc-num", /^\d{13,16}$/);
+      visualValidation(isValid, selector, "label", selector + " ~ .hint");
+      return isValid;
     },
     getElement() {
       return document.getElementById("cc-num");
-    } 
+    }
   },
   zip: {
     event: "input",
     callback() {
-      validator.isValidZip()
+      validator.zip.isValidZip()
+    },
+    isValidZip() {
+      const selector = "#zip";
+      const isValid = regexTestElementsValue("#zip", /^\d{5}$/);
+      visualValidation(isValid, selector, "label", selector + " ~ .hint");
+      return isValid;
     },
     getElement() {
       return document.getElementById("zip");
-    } 
+    }
   },
   cvv: {
     event: "input",
     callback() {
-      validator.isValidCvv()
+      validator.cvv.isValidCvv()
+    },
+    isValidCvv() {
+      const selector = "#cvv";
+      const isValid = regexTestElementsValue("#cvv", /^\d{3}$/);
+      visualValidation(isValid, selector, "label", selector + " ~ .hint");
+      return isValid;
     },
     getElement() {
       return document.getElementById("cvv");
-    } 
+    }
   },
   activities: {
     event: "change",
     callback() {
       activityChangeHandler(event)
     },
+    isValidActivity() {
+      // At least one activity must be selected
+      const selector = "#activities-box"
+      const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
+      const isValid = activityFields.some(activity => activity.checked);
+      visualValidation(isValid, selector, "fieldset", selector + " ~ .hint");
+      return isValid;
+    },
     getElement() {
       return document.getElementById("activities");
-    } 
+    }
   }
 };
 
@@ -202,7 +210,7 @@ function checkboxBlurHandler(event) {
   event.target.closest("label").classList.remove("focus");
 }
 
-// Real-time error messages
+// Real-time error messages for the required fields
 watchInput(validator);
 function watchInput({ name, email, cardNum, zip, cvv, activities }) {
   [name, email, cardNum, zip, cvv, activities].forEach(field => {
@@ -211,7 +219,7 @@ function watchInput({ name, email, cardNum, zip, cvv, activities }) {
 }
 
 function activityChangeHandler(event) {
-  validator.isValidActivity();
+  validator.activities.isValidActivity();
 
   // Disable activities with conflicting times
   const target = event.target.closest('input[type="checkbox"]')
@@ -226,5 +234,5 @@ function activityChangeHandler(event) {
         checkbox.removeAttribute("disabled")
         checkbox.closest("label").classList.remove("disabled");
       }
-    })
+    });
 }
