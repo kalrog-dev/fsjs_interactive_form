@@ -2,7 +2,29 @@
   Base and header styles
 ==================================== */
 
-@import url('https://fonts.googleapis.com/css?family=Nunito|Roboto+Mono');
+/* @import url('https://fonts.googleapis.com/css?family=Ubuntu'); */
+
+@font-face {
+  font-family: "Ubuntu";
+  font-weight: 400;
+  src: url("../fonts/Ubuntu-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  font-weight: 500;
+  src: url("../fonts/Ubuntu-Medium.ttf");
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  font-weight: 700;
+  src: url("../fonts/Ubuntu-Bold.ttf");
+}
+
+:root {
+  --ff: "Ubuntu", sans-serif;
+}
 
 * {
   box-sizing: border-box;
@@ -17,7 +39,7 @@ html {
 body,
 input,
 button {
-	font-family: 'Nunito', sans-serif;
+	font-family: var(--ff);
 }
 
 body {
@@ -111,14 +133,14 @@ select {
 input, 
 select, 
 option {
-  font-family: 'roboto', sans-serif;
+  font-family: var(--ff);
   transition: all 0.3s ease-out;
 }
 
 input {
   font-size: 1em;
   color: rgba(0, 0, 0, 0.7);
-	font-weight: 500;
+	font-weight: 400;
 	padding: .95em;
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -152,7 +174,7 @@ select {
 	-webkit-appearance: none;
 	-webkit-border-radius: 0px;
 	font-size: 1em;
-  font-weight: 500;
+  font-weight: 400;
   color: rgba(0, 0, 0, 0.7);
   width: 100%;
   padding: .95em;
@@ -271,7 +293,7 @@ button:hover {
 
 .activities.valid::after,
 .activities.not-valid::after {
-  top: 5px;
+  top: -27px;
 }
 /* ================================= 
   Basic info and t shirt styles
@@ -324,7 +346,7 @@ button:hover {
 }
 
 .activities-box {
-  font-family: 'roboto', sans-serif;
+  font-family: var(--ff);
   max-width: 100%;
   border-radius: 3px;
   border: 1px solid transparent;
@@ -363,7 +385,7 @@ button:hover {
 
 .activities label span:nth-of-type(1) {
   color: rgba(0, 0, 0, 0.75);
-  font-weight: bolder;
+  font-weight: 500;
   padding-left: 7px;
 }
 
@@ -384,7 +406,7 @@ button:hover {
   right: 20px;
   bottom: 10px;
   color: rgba(0, 0, 0, 0.75);
-  font-weight: bolder;
+  font-weight: 500;
 }
 
 .activity-img {

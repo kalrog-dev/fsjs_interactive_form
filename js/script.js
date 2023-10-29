@@ -69,7 +69,7 @@ const validator = {
       this.zip.isValidZip(),
       this.cvv.isValidCvv(),
     ];
-    return validation.every(isValidTestResult => isValidTestResult === true);
+    return validation.every(isValidTest => isValidTest === true);
   },
   name: {
     event: "input",
@@ -161,8 +161,8 @@ const validator = {
   },
   activities: {
     event: "change",
-    callback() {
-      activityChangeHandler(event)
+    callback(event) {
+      activityChangeHandler(event);
     },
     isValidActivity() {
       // At least one activity must be selected
@@ -175,15 +175,7 @@ const validator = {
     getElement() {
       return document.getElementById("activities");
     }
-  },
-  requiredFields: [
-    this.name,
-    this.email,
-    this.cardNum,
-    this.zip,
-    this.cvv,
-    this.activities,
-  ],
+  }
 };
 
 function regexTestElementsValue(selector, regex) {
