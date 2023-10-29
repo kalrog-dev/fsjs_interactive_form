@@ -51,12 +51,11 @@ function updatePayment() {
   methods.forEach(method => showOrHide(method, method.id === selectPayment.value));
 }
 
-// Form validation
+// Form validation on submit
 const form = document.querySelector("form");
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   validator.isValidAll() && form.submit();
-  console.log(`Name: ${validator.isValidName()}, Email: ${validator.isValidEmail()}, Activity: ${validator.isValidActivity()}, Card: ${validator.isValidCard()}`);
 });
 
 const validator = {
@@ -111,6 +110,60 @@ const validator = {
     const isValid = regexTestElementsValue("#cvv", /^\d{3}$/);
     visualValidation(isValid, selector, "label", selector + " ~ .hint");
     return isValid;
+  },
+  name: {
+    event: "input",
+    callback() {
+      validator.isValidName()
+    },
+    getElement() {
+      return document.getElementById("name");
+    }
+  },
+  email: {
+    event: "input",
+    callback() {
+      validator.isValidEmail()
+    },
+    getElement() {
+      return document.getElementById("email");
+    } 
+  },
+  cardNum: {
+    event: "input",
+    callback() {
+      validator.isValidNum()
+    },
+    getElement() {
+      return document.getElementById("cc-num");
+    } 
+  },
+  zip: {
+    event: "input",
+    callback() {
+      validator.isValidZip()
+    },
+    getElement() {
+      return document.getElementById("zip");
+    } 
+  },
+  cvv: {
+    event: "input",
+    callback() {
+      validator.isValidCvv()
+    },
+    getElement() {
+      return document.getElementById("cvv");
+    } 
+  },
+  activities: {
+    event: "change",
+    callback() {
+      activityChangeHandler(event)
+    },
+    getElement() {
+      return document.getElementById("activities");
+    } 
   }
 };
 
@@ -150,21 +203,11 @@ function checkboxBlurHandler(event) {
 }
 
 // Real-time error messages
-watchInput();
-function watchInput() {
-  const name = document.getElementById("name");
-  const email = document.getElementById("email");
-  const cardNum = document.getElementById("cc-num");
-  const zip = document.getElementById("zip");
-  const cvv = document.getElementById("cvv");
-  const activities = document.getElementById("activities");
-
-  name.addEventListener("input", validator.isValidName);
-  email.addEventListener("input", validator.isValidEmail);
-  cardNum.addEventListener("input", validator.isValidNum);
-  zip.addEventListener("input", validator.isValidZip);
-  cvv.addEventListener("input", validator.isValidCvv);
-  activities.addEventListener("change", activityChangeHandler);
+watchInput(validator);
+function watchInput({ name, email, cardNum, zip, cvv, activities }) {
+  [name, email, cardNum, zip, cvv, activities].forEach(field => {
+    field.getElement().addEventListener(field.event, field.callback);
+  });
 }
 
 function activityChangeHandler(event) {
