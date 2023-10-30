@@ -85,14 +85,15 @@ const validator = {
       return isValid;
     },
     updateHint({ name }) {
+      // Conditional errors
       const field = name.getElement();
       const hint = name.getHintElement();
       if (/^\s*$/.test(field.value)) {
         hint.textContent = "Name field cannot be blank";
       } else if (/^(?=.*[^a-z\s])/i.test(field.value)) {
-        hint.textContent = "Name field may only contain letters and whitespaces";
+        hint.textContent = "Name may only contain letters and whitespaces";
       } else {
-        hint.textContent = "Name field must be formatted correctly";
+        hint.textContent = "Name must be formatted correctly";
       }
     },
     getElement() {
@@ -115,14 +116,17 @@ const validator = {
       return isValid;
     },
     updateHint({ email }) {
+      // Conditional errors
       const field = email.getElement();
       const hint = email.getHintElement();
       if (/^\s*$/.test(field.value)) {
         hint.textContent = "Email address cannot be blank";
       } else if (/^(?!.*@)/.test(field.value)) {
         hint.textContent = "Email address must contain an @ symbol";
-      } else if (/(?<!@[^@]+\.[a-z]+)$/i.test(field.value)) {
-        hint.textContent = "Email address must end with a domain such as @duck.com";
+      } else if (/(?<!@[^@]+\.[^@]+)$/i.test(field.value)) {
+        hint.textContent = "Email must end with a domain such as duck.com";
+      } else if (/(?<!.[a-z]+)$/i.test(field.value)) {
+        hint.textContent = "Top-level domain may only contain letters";
       } else {
         hint.textContent = "Email address must be formatted correctly";
       }
