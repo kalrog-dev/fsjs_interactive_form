@@ -74,7 +74,7 @@ const validator = {
   name: {
     event: "input",
     callback() {
-      validator.name.isValidName()
+      validator.name.isValidName();
     },
     isValidName() {
       // Only letters and whitespaces, must contain letters
@@ -90,22 +90,39 @@ const validator = {
   email: {
     event: "input",
     callback() {
-      validator.email.isValidEmail()
+      validator.email.isValidEmail();
     },
     isValidEmail() {
       const selector = "#email";
       const isValid = regexTestElementsValue(selector, /^[^@]+@[^@]+\.[a-z]+$/i);
       visualValidation(isValid, selector, "label", selector + " ~ .hint");
+      !isValid && this.updateHint(validator);
       return isValid;
+    },
+    updateHint({ email }) {
+      const field = email.getElement();
+      const hint = email.getHintElement();
+      if (/^\s*$/.test(field.value)) {
+        hint.textContent = "Email address cannot be blank";
+      } else if (/^(?!.*@)/.test(field.value)) {
+        hint.textContent = "Email address must contain an @ symbol";
+      } else if (/(?<!@[^@]+\.[a-z]+)$/i.test(field.value)) {
+        hint.textContent = "Email address must end with a domain such as @duck.com";
+      } else {
+        hint.textContent = "Email address must be formatted correctly";
+      }
     },
     getElement() {
       return document.getElementById("email");
-    }
+    },
+    getHintElement() {
+      return document.querySelector("#email ~ .hint");
+    },
   },
   cardNum: {
     event: "input",
     callback() {
-      validator.cardNum.isValidNum()
+      validator.cardNum.isValidNum();
     },
     isValidNum() {
       // Return is valid if credit card is not the selected method
@@ -124,7 +141,7 @@ const validator = {
   zip: {
     event: "input",
     callback() {
-      validator.zip.isValidZip()
+      validator.zip.isValidZip();
     },
     isValidZip() {
       // Return is valid if credit card is not the selected method
@@ -143,7 +160,7 @@ const validator = {
   cvv: {
     event: "input",
     callback() {
-      validator.cvv.isValidCvv()
+      validator.cvv.isValidCvv();
     },
     isValidCvv() {
       // Return is valid if credit card is not the selected method
