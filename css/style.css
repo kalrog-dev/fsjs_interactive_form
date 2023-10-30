@@ -208,6 +208,7 @@ select.error {
 }
 
 label.valid input {
+  background-color: hsl(137, 53%, 96%);
   border-color: hsl(129 40% 48% / 1);
 }
 
@@ -260,15 +261,16 @@ button:hover {
 
 .not-valid {
   position: relative;
-  color: red;
+  color: inherit;
 }
 
 .not-valid .error-border {
-  border: 1px solid red;
+  background-color: hsl(5 75% 97%);
+  border-color: hsl(355 75% 60%);
 }
 
 .not-valid legend {
-  color: red;
+  color: inherit;
 }
 
 .valid::after {
