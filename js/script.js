@@ -110,7 +110,7 @@ const validator = {
     },
     isValidEmail() {
       const selector = "#email";
-      const isValid = regexTestElementsValue(selector, /^[^@]+@[^@]+\.[a-z]+$/i);
+      const isValid = regexTestElementsValue(selector, /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i);
       visualValidation(isValid, selector, "label", selector + " ~ .hint");
       !isValid && this.updateHint(validator);
       return isValid;
@@ -121,6 +121,10 @@ const validator = {
       const hint = email.getHintElement();
       if (/^\s*$/.test(field.value)) {
         hint.textContent = "Email address cannot be blank";
+      } else if (/^(?=.*\s)/.test(field.value)) {
+        hint.textContent = "Email address must not contain whitespaces";
+      } else if (/^(?=.*[#$%&~!])/.test(field.value)) {
+        hint.textContent = "Symbols #$%&~! are not allowed";
       } else if (/^(?!.*@)/.test(field.value)) {
         hint.textContent = "Email address must contain an @ symbol";
       } else if (/(?<!@[^@]+\.[^@]+)$/i.test(field.value)) {
