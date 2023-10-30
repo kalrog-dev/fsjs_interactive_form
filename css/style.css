@@ -207,6 +207,10 @@ select.error {
 	border: 1px solid rgb(242, 112, 156) ;
 }
 
+label.valid input {
+  border-color: hsl(129 40% 48% / 1);
+}
+
 button {
   cursor: pointer;
   font-size: 1.5rem;
