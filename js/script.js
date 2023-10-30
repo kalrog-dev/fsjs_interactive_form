@@ -81,10 +81,25 @@ const validator = {
       const selector = 'input[type="text"]';
       const isValid = regexTestElementsValue(selector, /^(?=.*[a-z])[a-z\s]*$/i);
       visualValidation(isValid, selector, "label", selector + " ~ .hint");
+      !isValid && this.updateHint(validator);
       return isValid;
+    },
+    updateHint({ name }) {
+      const field = name.getElement();
+      const hint = name.getHintElement();
+      if (/^\s*$/.test(field.value)) {
+        hint.textContent = "Name field cannot be blank";
+      } else if (/^(?=.*[^a-z\s])/i.test(field.value)) {
+        hint.textContent = "Name field may only contain letters and whitespaces";
+      } else {
+        hint.textContent = "Name field must be formatted correctly";
+      }
     },
     getElement() {
       return document.getElementById("name");
+    },
+    getHintElement() {
+      return document.querySelector('input[type="text"] ~ .hint');
     }
   },
   email: {
