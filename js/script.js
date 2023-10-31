@@ -114,24 +114,33 @@ const fieldErrors = {
   ]
 };
 
+/** Class representing a required field. */
 class RequiredField {
   /**
-   * Represents a required field
-   * @constructor
-   * @param {string} id - Element's id without #.
-   * @param {object} regex - Regular expression to validate input fields.
+   * Create a required field.
+   * @param {string} id - Element's id without the # symbol.
+   * @param {object} regex - Regular expression to validate an input field.
    */
   constructor(id, regex) {
     this.id = id;
     this.regex = regex;
-    this.event = this.id !== "activities-box" ? "input" : "change";
   }
 
+  /**
+   * Run real-time on input validation for input elements and on change
+   * validation for activities.
+   * @param {object} event - The event object.
+   * @param {RequiredField} field - An instance of the RequiredField.
+   */
   eventHandler(event, field) {
     field.validate();
     field.id === "activities-box" && field.disableConflictingActivity(event);
   }
 
+  /**
+   * Validate the required field. Add or remove classes to show the result. Then identify and display an error.
+   * @returns {boolean} The field's validation result.
+   */
   validate() {
     if (selectPayment.value !== "credit-card" && (this.id === "cc-num" || this.id === "zip" || this.id === "cvv")) {
       return true;
@@ -217,7 +226,7 @@ class RequiredField {
   }
 }
 
-// Create required field instances (id, expression to validate input fields)
+// Create instances for all required fields.
 const nameField = new RequiredField("name", /^(?=.*[a-z])[a-z\s]*$/i);
 const emailField = new RequiredField("email", /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i);
 const activities  = new RequiredField("activities-box", undefined);
@@ -226,12 +235,10 @@ const zip = new RequiredField("zip", /^\d{5}$/);
 const cvv = new RequiredField("cvv", /^\d{3}$/);
 const requiredFields = [nameField, emailField, activities, cardNum, zip, cvv];
 
-// Real-time error messages for the required fields
-requiredFields.forEach(field => {
-  field.getElement().addEventListener(field.event, (event) => field.eventHandler(event, field));
-});
-
-// Invoke the validate method of all required fields (this also shows visual clues)
+/**
+ * Invoke the validate method of all required fields. This also shows visual clues.
+ * @returns {boolean} The validation result
+ */
 function validateAll() {
   let validation = [];
   requiredFields.forEach(field => validation.push(field.validate()));
@@ -243,4 +250,10 @@ const form = document.querySelector("form");
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   validateAll() && form.submit();
+});
+
+// Real-time error messages for the required fields
+requiredFields.forEach(field => {
+  const eventToListenFor = field.id !== "activities-box" ? "input" : "change";
+  field.getElement().addEventListener(eventToListenFor, (event) => field.eventHandler(event, field));
 });
