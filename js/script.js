@@ -1,6 +1,5 @@
 // Set focus on the name field by default
-const nameField = document.querySelector('input[type="text"]');
-nameField.focus();
+document.querySelector('input[type="text"]').focus();
 
 // Hide "other job" field by default
 const otherJob = document.getElementById("other-job-role");
@@ -51,193 +50,6 @@ function updatePayment() {
   methods.forEach(method => showOrHide(method, method.id === selectPayment.value));
 }
 
-// Form validation on submit
-const form = document.querySelector("form");
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  validator.isValidAll() && form.submit();
-});
-
-const validator = {
-  isValidAll() {
-    // Test required fields and show visual clues
-    const validation = [
-      this.name.isValidName(),
-      this.email.isValidEmail(),
-      this.activities.isValidActivity(),
-      this.cardNum.isValidNum(),
-      this.zip.isValidZip(),
-      this.cvv.isValidCvv(),
-    ];
-    return validation.every(isValidTest => isValidTest === true);
-  },
-  name: {
-    event: "input",
-    callback() {
-      validator.name.isValidName();
-    },
-    isValidName() {
-      // Only letters and whitespaces, must contain letters
-      const selector = 'input[type="text"]';
-      const isValid = regexTestElementsValue(selector, /^(?=.*[a-z])[a-z\s]*$/i);
-      visualValidation(isValid, selector, "label", selector + " ~ .hint");
-      !isValid && this.updateHint(validator);
-      return isValid;
-    },
-    updateHint({ name }) {
-      // Conditional errors
-      const field = name.getElement();
-      const hint = name.getHintElement();
-      if (/^\s*$/.test(field.value)) {
-        hint.textContent = "Name field cannot be blank";
-      } else if (/^(?=.*[^a-z\s])/i.test(field.value)) {
-        hint.textContent = "Name may only contain letters and whitespaces";
-      } else {
-        hint.textContent = "Name must be formatted correctly";
-      }
-    },
-    getElement() {
-      return document.getElementById("name");
-    },
-    getHintElement() {
-      return document.querySelector('input[type="text"] ~ .hint');
-    }
-  },
-  email: {
-    event: "input",
-    callback() {
-      validator.email.isValidEmail();
-    },
-    isValidEmail() {
-      const selector = "#email";
-      const isValid = regexTestElementsValue(selector, /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i);
-      visualValidation(isValid, selector, "label", selector + " ~ .hint");
-      !isValid && this.updateHint(validator);
-      return isValid;
-    },
-    updateHint({ email }) {
-      // Conditional errors
-      const field = email.getElement();
-      const hint = email.getHintElement();
-      if (/^\s*$/.test(field.value)) {
-        hint.textContent = "Email address cannot be blank";
-      } else if (/^(?=.*\s)/.test(field.value)) {
-        hint.textContent = "Email address must not contain whitespaces";
-      } else if (/^(?=.*[#$%&~!])/.test(field.value)) {
-        hint.textContent = "Symbols #$%&~! are not allowed";
-      } else if (/^(?!.*@)/.test(field.value)) {
-        hint.textContent = "Email address must contain an @ symbol";
-      } else if (/(?<!@[^@]+\.[^@]+)$/i.test(field.value)) {
-        hint.textContent = "Email must end with a domain such as duck.com";
-      } else if (/(?<!.[a-z]+)$/i.test(field.value)) {
-        hint.textContent = "Top-level domain may only contain letters";
-      } else {
-        hint.textContent = "Email address must be formatted correctly";
-      }
-    },
-    getElement() {
-      return document.getElementById("email");
-    },
-    getHintElement() {
-      return document.querySelector("#email ~ .hint");
-    },
-  },
-  cardNum: {
-    event: "input",
-    callback() {
-      validator.cardNum.isValidNum();
-    },
-    isValidNum() {
-      // Return is valid if credit card is not the selected method
-      if (selectPayment.value !== "credit-card") {
-        return true;
-      }
-      const selector = "#cc-num";
-      const isValid = regexTestElementsValue("#cc-num", /^\d{13,16}$/);
-      visualValidation(isValid, selector, "label", selector + " ~ .hint");
-      return isValid;
-    },
-    getElement() {
-      return document.getElementById("cc-num");
-    }
-  },
-  zip: {
-    event: "input",
-    callback() {
-      validator.zip.isValidZip();
-    },
-    isValidZip() {
-      // Return is valid if credit card is not the selected method
-      if (selectPayment.value !== "credit-card") {
-        return true;
-      }
-      const selector = "#zip";
-      const isValid = regexTestElementsValue("#zip", /^\d{5}$/);
-      visualValidation(isValid, selector, "label", selector + " ~ .hint");
-      return isValid;
-    },
-    getElement() {
-      return document.getElementById("zip");
-    }
-  },
-  cvv: {
-    event: "input",
-    callback() {
-      validator.cvv.isValidCvv();
-    },
-    isValidCvv() {
-      // Return is valid if credit card is not the selected method
-      if (selectPayment.value !== "credit-card") {
-        return true;
-      }
-      const selector = "#cvv";
-      const isValid = regexTestElementsValue("#cvv", /^\d{3}$/);
-      visualValidation(isValid, selector, "label", selector + " ~ .hint");
-      return isValid;
-    },
-    getElement() {
-      return document.getElementById("cvv");
-    }
-  },
-  activities: {
-    event: "change",
-    callback(event) {
-      activityChangeHandler(event);
-    },
-    isValidActivity() {
-      // At least one activity must be selected
-      const selector = "#activities-box"
-      const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
-      const isValid = activityFields.some(activity => activity.checked);
-      visualValidation(isValid, selector, "fieldset", selector + " ~ .hint");
-      return isValid;
-    },
-    getElement() {
-      return document.getElementById("activities");
-    }
-  }
-};
-
-function regexTestElementsValue(selector, regex) {
-  const element = document.querySelector(selector);
-  const str = element.value;
-  return regex.test(str);
-}
-
-function visualValidation(isValid, targetSelector, closestParentSelector, hintSelector) {
-  const parent = document.querySelector(targetSelector).closest(closestParentSelector);
-  const hint = document.querySelector(hintSelector);
-  if (!isValid) {
-    parent.classList.add("not-valid");
-    parent.classList.remove("valid");
-    hint.style.display = "inherit";
-  } else {
-    parent.classList.add("valid");
-    parent.classList.remove("not-valid");
-    hint.style.display = "none";
-  }
-}
-
 // Checkbox focus state
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 checkboxes.forEach(checkbox => {
@@ -253,18 +65,137 @@ function checkboxBlurHandler(event) {
   event.target.closest("label").classList.remove("focus");
 }
 
-// Real-time error messages for the required fields
-watchInput(validator);
-function watchInput({ name, email, cardNum, zip, cvv, activities }) {
-  [name, email, cardNum, zip, cvv, activities].forEach(field => {
-    field.getElement().addEventListener(field.event, field.callback);
-  });
-}
+// Conditional errors
+const fieldErrors = {
+  name: [
+    {
+      test: /^\s*$/,
+      hint: "Name field cannot be blank"
+    },
+    {
+      test: /^(?=.*[^a-z\s])/i,
+      hint: "Name may only contain letters and whitespaces"
+    },
+    {
+      test: undefined,
+      hint: "Name must be formatted correctly"
+    }
+  ],
+  email: [
+    {
+      test: /^\s*$/,
+      hint: "Email address cannot be blank"
+    },
+    {
+      test: /^(?=.*\s)/,
+      hint: "Email address must not contain whitespaces"
+    },
+    {
+      test: /^(?=.*[#$%&~!])/,
+      hint: "Symbols #$%&~! are not allowed"
+    },
+    {
+      test: /^(?!.*@)/,
+      hint: "Email address must contain an @ symbol"
+    },
+    {
+      test: /(?<!@[^@]+\.[^@]+)$/i,
+      hint: "Email must end with a domain such as duck.com"
+    },
+    {
+      test: /(?<!.[a-z]+)$/i,
+      hint: "Top-level domain may only contain letters"
+    },
+    {
+      test: undefined,
+      hint: "Email address must be formatted correctly"
+    }
+  ]
+};
 
-function activityChangeHandler(event) {
-  validator.activities.isValidActivity();
+class RequiredField {
+  constructor(id, regex) {
+    // id, validation test, event for real-time errors
+    this.id = id;
+    this.regex = regex;
+    this.event = this.id !== "activities-box" ? "input" : "change";
+  }
 
-  // Disable activities with conflicting times
+  eventHandler(event, field) {
+    field.validate();
+    field.id === "activities-box" && field.disableConflictingActivity(event);
+  }
+
+  validate() {
+    // Return is valid if credit card is not the selected method
+    if (selectPayment.value !== "credit-card" && (this.id === "cc-num" || this.id === "zip" || this.id === "cvv")) {
+      return true;
+    }
+    const isValid = this.id !== "activities-box" ? this.regexTestInputValue() : this.isSelectedActivity();
+    this.visualValidation(isValid);
+    !isValid && this.updateHint();
+    return isValid;
+  }
+
+  updateHint() {
+    if (this.id !== "name" && this.id !== "email") {
+      return;
+    }
+    const field = this.getElement();
+    const hint = this.getHintElement();
+    const errors = fieldErrors[this.id];
+    errors.every(error => {
+      const regex = error.test;
+      const hintText = error.hint;
+      // Break out of the loop if the error is identified, else continue
+      if (regex.test(field.value) || regex === "undefined") {
+        hint.textContent = hintText;
+        return false;
+      }
+      return true;
+    });
+  }
+
+  visualValidation(isValid) {
+    const parent = this.getParentElement();
+    const hint = this.getHintElement();
+
+    if (!isValid) {
+      parent.classList.add("not-valid");
+      parent.classList.remove("valid");
+      hint.style.display = "inherit";
+    } else {
+      parent.classList.add("valid");
+      parent.classList.remove("not-valid");
+      hint.style.display = "none";
+    }
+  }
+
+  getElement() {
+    return document.getElementById(this.id);
+  }
+
+  getHintElement() {
+    return document.querySelector(`#${this.id} ~ .hint`);
+  }
+
+  getParentElement() {
+    const field = this.getElement();
+    return this.id !== "activities-box" ? field.closest("label") : field.closest("fieldset");
+  }
+
+  regexTestInputValue() {
+    const str = this.getElement().value;
+    return this.regex.test(str);
+  }
+
+  isSelectedActivity() {
+    // At least one activity must be selected
+    const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
+    return activityFields.some(activity => activity.checked);
+  }
+
+  disableConflictingActivity(event) {
   const target = event.target.closest('input[type="checkbox"]')
   const targetTime = target.dataset.dayAndTime;
   [...checkboxes]
@@ -278,4 +209,33 @@ function activityChangeHandler(event) {
         checkbox.closest("label").classList.remove("disabled");
       }
     });
+  }
 }
+
+// Create required field instances (id, validation test)
+const nameField   = new RequiredField("name", /^(?=.*[a-z])[a-z\s]*$/i);
+const emailField  = new RequiredField("email", /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i);
+const cardNum     = new RequiredField("cc-num", /^\d{13,16}$/);
+const zip         = new RequiredField("zip", /^\d{5}$/);
+const cvv         = new RequiredField("cvv", /^\d{3}$/);
+const activities  = new RequiredField("activities-box", undefined);
+const requiredFields = [nameField, emailField, cardNum, zip, cvv, activities];
+
+// Real-time error messages for the required fields
+requiredFields.forEach(field => {
+  field.getElement().addEventListener(field.event, (event) => field.eventHandler(event, field));
+});
+
+// Invoke the validate method of all required fields (this also shows visual clues)
+function validateAll() {
+  let validation = [];
+  requiredFields.forEach(field => validation.push(field.validate()));
+  return validation.every(isValidTest => isValidTest === true);
+}
+
+// Form validation on submit
+const form = document.querySelector("form");
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  validateAll() && form.submit();
+});
