@@ -28,7 +28,7 @@ selectDesign.addEventListener("change", () => {
   });
 });
 
-// Update activities' cost
+// Update activities' total cost
 document.getElementById("activities").addEventListener("change", updateTotal);
 function updateTotal(event) {
   const checkbox = event.target.closest('input[type="checkbox"]');
@@ -39,12 +39,13 @@ function updateTotal(event) {
   activitiesCost.textContent = `Total: $${currentTotal + difference}`;
 }
 
-// Display only the selected payment section
+// Set credit card as default method and listen for changes
 const selectPayment = document.getElementById("payment");
 selectPayment.value = "credit-card";
 updatePayment();
 selectPayment.addEventListener("change", updatePayment);
 
+// Display only the selected payment section
 function updatePayment() {
   const methods = document.querySelectorAll(".payment-methods > div:not(.payment-method-box)");
   methods.forEach(method => showOrHide(method, method.id === selectPayment.value));
@@ -114,6 +115,12 @@ const fieldErrors = {
 };
 
 class RequiredField {
+  /**
+   * Represents a required field
+   * @constructor
+   * @param {string} id - Element's id without #.
+   * @param {object} regex - Regular expression to validate input fields.
+   */
   constructor(id, regex) {
     this.id = id;
     this.regex = regex;
@@ -126,11 +133,10 @@ class RequiredField {
   }
 
   validate() {
-    // Return is valid if credit card is not the selected method
     if (selectPayment.value !== "credit-card" && (this.id === "cc-num" || this.id === "zip" || this.id === "cvv")) {
       return true;
     }
-    const isValid = this.id !== "activities-box" ? this.regexTestInputValue() : this.isSelectedActivity();
+    const isValid = this.id !== "activities-box" ? this.regexTestInputValue() : this.isOneOrMoreActivitySelected();
     this.visualValidation(isValid);
     !isValid && this.updateHint();
     return isValid;
@@ -146,11 +152,12 @@ class RequiredField {
     errors.every(error => {
       const regex = error.test;
       const hintText = error.hint;
-      // Break out of the loop if the error is identified, else continue
+      // Break out of the loop if the error is identified
       if (regex.test(field.value) || regex === "undefined") {
         hint.textContent = hintText;
         return false;
       }
+      // Continue the every loop
       return true;
     });
   }
@@ -188,8 +195,7 @@ class RequiredField {
     return this.regex.test(str);
   }
 
-  isSelectedActivity() {
-    // At least one activity must be selected
+  isOneOrMoreActivitySelected() {
     const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
     return activityFields.some(activity => activity.checked);
   }
@@ -211,7 +217,7 @@ class RequiredField {
   }
 }
 
-// Create required field instances (id, validation test)
+// Create required field instances (id, expression to validate input fields)
 const nameField = new RequiredField("name", /^(?=.*[a-z])[a-z\s]*$/i);
 const emailField = new RequiredField("email", /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i);
 const activities  = new RequiredField("activities-box", undefined);
