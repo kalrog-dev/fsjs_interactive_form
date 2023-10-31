@@ -1,34 +1,34 @@
-// Set focus on the name field by default
+// Set focus on the name field by default.
 document.querySelector('input[type="text"]').focus();
 
-// Hide "other job" field by default
+// Hide "other job" field by default.
 const otherJob = document.getElementById("other-job-role");
 otherJob.style.display = "none";
 
-// Display the "other job" field if "other" role is selected
+// Display the "other job" field if "other" role is selected.
 const selectJob = document.getElementById("title");
 selectJob.addEventListener("change", () => showOrHide(otherJob, selectJob.value === "other"));
 function showOrHide(element, condition) {
   element.style.display = condition ? "inherit" : "none";
 }
 
-// Disable t-shirt color selection by default
+// Disable t-shirt color selection by default.
 const selectColor = document.getElementById("color");
 selectColor.setAttribute("disabled", "");
 
-// If t-shirt design is selected
+// If t-shirt design is selected.
 const selectDesign = document.getElementById("design");
 selectDesign.addEventListener("change", () => {
-  // Enable color selection
+  // Enable color selection.
   selectColor.removeAttribute("disabled");
 
-  // Update color selection options based on design select value
+  // Update color selection options based on design select value.
   [...document.querySelectorAll("option[data-theme]")].forEach(option => {
     option.dataset.theme !== selectDesign.value ? option.setAttribute("hidden", "") : option.removeAttribute("hidden")
   });
 });
 
-// Update activities' total cost
+// Update activities' total cost.
 document.getElementById("activities").addEventListener("change", updateTotal);
 function updateTotal(event) {
   const checkbox = event.target.closest('input[type="checkbox"]');
@@ -39,19 +39,19 @@ function updateTotal(event) {
   activitiesCost.textContent = `Total: $${currentTotal + difference}`;
 }
 
-// Set credit card as default method and listen for changes
+// Set credit card as default method and listen for changes.
 const selectPayment = document.getElementById("payment");
 selectPayment.value = "credit-card";
 updatePayment();
 selectPayment.addEventListener("change", updatePayment);
 
-// Display only the selected payment section
+// Display only the selected payment section.
 function updatePayment() {
   const methods = document.querySelectorAll(".payment-methods > div:not(.payment-method-box)");
   methods.forEach(method => showOrHide(method, method.id === selectPayment.value));
 }
 
-// Checkbox focus state
+// Checkbox focus state.
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 checkboxes.forEach(checkbox => {
   checkbox.addEventListener("focus", checkboxFocusHandler);
@@ -66,7 +66,7 @@ function checkboxBlurHandler(event) {
   event.target.closest("label").classList.remove("focus");
 }
 
-// Conditional error messages
+// Conditional error messages.
 const fieldErrors = {
   name: [
     {
@@ -119,7 +119,7 @@ class RequiredField {
   /**
    * Create a required field.
    * @param {string} id - Element's id without the # symbol.
-   * @param {object} regex - Regular expression to validate an input field.
+   * @param {RegExp} regex - Regular expression to validate an input field.
    */
   constructor(id, regex) {
     this.id = id;
@@ -138,7 +138,7 @@ class RequiredField {
   }
 
   /**
-   * Validate the required field. Add or remove classes to show the result. Then identify and display an error.
+   * Validate the required field. Then apply success or error styles and give a hint to pass the validation.
    * @returns {boolean} The field's validation result.
    */
   validate() {
@@ -151,6 +151,12 @@ class RequiredField {
     return isValid;
   }
 
+  /**
+   * Test input field's value with regular expressions to identify the reason validation has failed 
+   * and display a corresponding hint.
+   * @see fieldErrors
+   * @returns {undefined}
+   */
   updateHint() {
     if (this.id !== "name" && this.id !== "email") {
       return;
@@ -161,16 +167,20 @@ class RequiredField {
     errors.every(error => {
       const regex = error.test;
       const hintText = error.hint;
-      // Break out of the loop if the error is identified
+      // Break out of the loop if the error is identified.
       if (regex.test(field.value) || regex === "undefined") {
         hint.textContent = hintText;
         return false;
       }
-      // Continue the every loop
+      // Continue the every loop.
       return true;
     });
   }
 
+  /**
+   * Toggle classes to apply the success or error styles. 
+   * @param {boolean} isValid - The result of the field's validation.
+   */
   visualValidation(isValid) {
     const parent = this.getParentElement();
     const hint = this.getHintElement();
@@ -186,29 +196,53 @@ class RequiredField {
     }
   }
 
+  /**
+   * Get reference to the required field.
+   * @returns {HTMLElement}
+   */
   getElement() {
     return document.getElementById(this.id);
   }
 
+  /**
+   * Get reference to a hint associated with the required field.
+   * @returns {HTMLSpanElement}
+   */
   getHintElement() {
     return document.querySelector(`#${this.id} ~ .hint`);
   }
 
+  /**
+   * Get reference to a parent of the required field.
+   * @returns {HTMLLabelElement|HTMLFieldSetElement}
+   */
   getParentElement() {
     const field = this.getElement();
     return this.id !== "activities-box" ? field.closest("label") : field.closest("fieldset");
   }
 
+  /**
+   * Test if the regex pattern exists in the input field's value.
+   * @returns {boolean}
+   */
   regexTestInputValue() {
     const str = this.getElement().value;
     return this.regex.test(str);
   }
 
+  /**
+   * Validate the activities field by checking if at least one activity has been selected.
+   * @returns {boolean}
+   */
   isOneOrMoreActivitySelected() {
     const activityFields = [...document.querySelectorAll('#activities input[type="checkbox"]')];
     return activityFields.some(activity => activity.checked);
   }
 
+  /**
+   * Disable or enable activities that occur at the same time.
+   * @param {object} event - The event object.
+   */
   disableConflictingActivity(event) {
   const target = event.target.closest('input[type="checkbox"]')
   const targetTime = target.dataset.dayAndTime;
@@ -237,7 +271,7 @@ const requiredFields = [nameField, emailField, activities, cardNum, zip, cvv];
 
 /**
  * Invoke the validate method of all required fields. This also shows visual clues.
- * @returns {boolean} The validation result
+ * @returns {boolean} The validation result.
  */
 function validateAll() {
   let validation = [];
@@ -245,14 +279,14 @@ function validateAll() {
   return validation.every(isValidTest => isValidTest === true);
 }
 
-// Form validation on submit
+// Form validation on submit.
 const form = document.querySelector("form");
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   validateAll() && form.submit();
 });
 
-// Real-time error messages for the required fields
+// Real-time error messages for the required fields.
 requiredFields.forEach(field => {
   const eventToListenFor = field.id !== "activities-box" ? "input" : "change";
   field.getElement().addEventListener(eventToListenFor, (event) => field.eventHandler(event, field));
