@@ -65,7 +65,7 @@ function checkboxBlurHandler(event) {
   event.target.closest("label").classList.remove("focus");
 }
 
-// Conditional errors
+// Conditional error messages
 const fieldErrors = {
   name: [
     {
@@ -115,7 +115,6 @@ const fieldErrors = {
 
 class RequiredField {
   constructor(id, regex) {
-    // id, validation test, event for real-time errors
     this.id = id;
     this.regex = regex;
     this.event = this.id !== "activities-box" ? "input" : "change";
@@ -213,13 +212,13 @@ class RequiredField {
 }
 
 // Create required field instances (id, validation test)
-const nameField   = new RequiredField("name", /^(?=.*[a-z])[a-z\s]*$/i);
-const emailField  = new RequiredField("email", /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i);
-const cardNum     = new RequiredField("cc-num", /^\d{13,16}$/);
-const zip         = new RequiredField("zip", /^\d{5}$/);
-const cvv         = new RequiredField("cvv", /^\d{3}$/);
+const nameField = new RequiredField("name", /^(?=.*[a-z])[a-z\s]*$/i);
+const emailField = new RequiredField("email", /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i);
 const activities  = new RequiredField("activities-box", undefined);
-const requiredFields = [nameField, emailField, cardNum, zip, cvv, activities];
+const cardNum = new RequiredField("cc-num", /^\d{13,16}$/);
+const zip = new RequiredField("zip", /^\d{5}$/);
+const cvv = new RequiredField("cvv", /^\d{3}$/);
+const requiredFields = [nameField, emailField, activities, cardNum, zip, cvv];
 
 // Real-time error messages for the required fields
 requiredFields.forEach(field => {
