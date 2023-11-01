@@ -18,7 +18,7 @@ selectJob.addEventListener("change", () => showOrHide(otherJob, selectJob.value 
 /**
  * Display or hide an element based on a condition.
  * @param {HTMLInputElement|HTMLDivElement} element - Reference to the element to display or hide.
- * @param {boolean} condition - The condition for displaying the element.
+ * @param {boolean} condition - Condition to display the element.
  * @returns {undefined}
  */
 function showOrHide(element, condition) {
@@ -42,8 +42,14 @@ selectDesign.addEventListener("change", () => {
   });
 });
 
-// Update activities' total cost.
+// Update the total cost of activities when an activity has been (un)checked.
 document.getElementById("activities").addEventListener("change", updateTotal);
+
+/**
+ * Update the total cost of activities.
+ * @param {object} event - The event object.
+ * @returns {undefined}
+ */
 function updateTotal(event) {
   const checkbox = event.target.closest('input[type="checkbox"]');
   const multiplier = checkbox.checked ? 1 : -1;
