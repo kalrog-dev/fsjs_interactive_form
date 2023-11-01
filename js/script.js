@@ -82,7 +82,7 @@ const fieldErrors = {
     },
     {
       test: /^(?=.*[^a-z\s])/i,
-      hint: "Name may only contain letters and whitespaces"
+      hint: "Name may only contain letters or whitespaces"
     },
     {
       test: undefined,
@@ -126,7 +126,7 @@ class RequiredField {
   /**
    * Create a required field.
    * @param {string} id - Element's id without the # symbol.
-   * @param {RegExp} regex - Regular expression to validate an input field.
+   * @param {RegExp|undefined} regex - Regular expression to validate a field.
    */
   constructor(id, regex) {
     this.id = id;
@@ -302,7 +302,7 @@ const constructorArgs = {
 function createInstances() {
   const instances = [];
   const fields = Object.values(constructorArgs);
-  for (let field of fields) {
+  for (const field of fields) {
     const { id, regex } = field;
     instances.push(new RequiredField(id, regex));
   }
