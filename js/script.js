@@ -14,6 +14,13 @@ otherJob.style.display = "none";
 // Display the "other job" field if "other" role is selected.
 const selectJob = document.getElementById("title");
 selectJob.addEventListener("change", () => showOrHide(otherJob, selectJob.value === "other"));
+
+/**
+ * Display or hide an element based on a condition.
+ * @param {HTMLInputElement|HTMLDivElement} element - Reference to the element to display or hide.
+ * @param {boolean} condition - The condition for displaying the element.
+ * @returns {undefined}
+ */
 function showOrHide(element, condition) {
   element.style.display = condition ? "inherit" : "none";
 }
@@ -138,6 +145,7 @@ class RequiredField {
    * validation for activities.
    * @param {object} event - The event object.
    * @param {RequiredField} field - An instance of the RequiredField.
+   * @returns {undefined}
    */
   eventHandler(event, field) {
     field.validate();
@@ -187,6 +195,7 @@ class RequiredField {
   /**
    * Toggle classes to apply the success or error styles. 
    * @param {boolean} isValid - The result of the field's validation.
+   * @returns {undefined}
    */
   visualValidation(isValid) {
     const parent = this.getParentElement();
@@ -249,6 +258,7 @@ class RequiredField {
   /**
    * Disable or enable activities that occur at the same time.
    * @param {object} event - The event object.
+   * @returns {undefined}
    */
   disableConflictingActivity(event) {
     const target = event.target.closest('input[type="checkbox"]')
