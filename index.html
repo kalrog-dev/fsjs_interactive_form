@@ -16,26 +16,19 @@
     </div>
   </header>
 	<div class="container">
-
     <form action="index.html" method="post" novalidate autocomplete="off">
       <p id="form-hint" class="form-hint"><span class="asterisk">*</span> - required field</p>
-
       <div class="basic-info-and-shirt-box">       
         <fieldset class="basic-info">         
           <legend>Basic Info</legend>
-          
           <label for="name">Name: <span class="asterisk">*</span>
             <input type="text" id="name" name="user-name" class="error-border">
             <span id="name-hint" class="name-hint hint">Name field cannot be blank</span>
           </label>
-          
-          
           <label for="email">Email Address: <span class="asterisk">*</span>
             <input type="email" id="email" name="user-email" class="error-border">
             <span id="email-hint" class="email-hint hint">Email address must be formatted correctly</span>
           </label>
-          
-          
           <label for="title">Job Role</label>
           <select id="title" name="user-title">
             <option hidden>Select Job Role</option>
@@ -46,10 +39,8 @@
             <option value="student">Student</option>
             <option value="other">Other</option>  
           </select> 
-          
           <input type="text" name="other-job-role" id="other-job-role" class="other-job-role" placeholder="Other job role?">
         </fieldset>
-        
         <fieldset class="shirts">
           <legend>T-Shirt Info</legend>
           <div class="shirt-div-box">
@@ -63,7 +54,6 @@
                 <option value="extra large">XXL</option>
               </select>
             </div>
-
             <div id="shirt-designs" class="shirt-designs">
               <label for="design">Design:</label>
               <select id="design" name="user-design">
@@ -72,7 +62,6 @@
                 <option value="heart js">Theme - I &#9829; JS</option>
               </select>
             </div>
-
             <div id="shirt-colors" class="shirt-colors">
               <label for="color">Color:</label>
               <select id="color">
@@ -88,7 +77,6 @@
           </div>
         </fieldset>
       </div>               
-
       <fieldset id="activities" class="activities">
         <legend>Register for Activities <span class="asterisk">*</span></legend>
         <div id="activities-box" class="activities-box error-border">
@@ -144,10 +132,8 @@
         <p id="activities-cost" class="activities-cost">Total: $0</p>
         <p id="activities-hint" class="activities-hint hint">Choose at least one activity</p>        	
       </fieldset>
-
       <fieldset class="payment-methods">
         <legend>Payment Info</legend>
-
         <div class="payment-method-box">
           <label for="payment">I'm going to pay with:</label>
           <select id="payment" name="user-payment">
@@ -157,7 +143,6 @@
             <option value="bitcoin">Bitcoin</option>
           </select>
         </div>
-
         <div id="credit-card" class="credit-card">
           <div class="expiration-box">
             <div class="month-box">
@@ -178,7 +163,6 @@
                 <option value="12">12 - December</option>          		          
               </select>
             </div>
-
             <div class="year-box">
               <label for="exp-year">Expiration Year:</label>
               <select id="exp-year" name="user-exp-year" class="error-border">
@@ -191,7 +175,6 @@
               </select> 
             </div>
           </div> 
-
           <div class="credit-card-box">
             <div class="num-box">
               <label for="cc-num">Card Number: <span class="asterisk">*</span>
@@ -199,14 +182,12 @@
                 <span id="cc-hint" class="cc-hint hint">Credit card number must be between 13 - 16 digits</span>
               </label>
             </div>
-
             <div class="zip-box">
               <label for="zip">Zip Code: <span class="asterisk">*</span>
                 <input id="zip" name="user-zip" type="text" class="error-border">
                 <span id="zip-hint" class="zip-hint hint">Zip Code must be 5 digits</span>
               </label>
             </div>
-
             <div class="cvv-box">
               <label for="cvv">CVV: <span class="asterisk">*</span>
                 <input id="cvv" name="user-cvv" type="text" class="error-border">
@@ -215,18 +196,15 @@
             </div>
           </div>           	         
         </div>
-
         <div id="paypal" class="paypal">
           <h3>PayPal</h3>
         	<p>If you selected the PayPal option we'll take you to Paypal's site to set up your billing information, when you click “Register” below.</p>
         </div> 
-
         <div id="bitcoin" class="bitcoin">
           <h3>Bitcoin</h3>
         	<p>If you selected the Bitcoin option we'll take you to the Coinbase site to set up your billing information. Due to the nature of exchanging Bitcoin, all Bitcoin transactions will be final.</p>
         </div>                  
       </fieldset>        
-        
       <button type="submit">Register</button>      
     </form>
   </div>
