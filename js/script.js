@@ -32,9 +32,9 @@ selectColor.setAttribute("disabled", "");
 // If design is selected.
 const selectDesign = document.getElementById("design");
 selectDesign.addEventListener("change", () => {
-  // Enable color selection and select the default option.
+  // Enable color selection and select the first option.
   selectColor.removeAttribute("disabled");
-  selectColor.value = "Select a design theme above";
+  selectColor.value = document.querySelector(`option[data-theme="${selectDesign.value}"]`).value;
 
   // Update color selection options based on design select value.
   [...document.querySelectorAll("option[data-theme]")].forEach(option => {
