@@ -32,7 +32,7 @@ selectColor.setAttribute("disabled", "");
 // If design is selected.
 const selectDesign = document.getElementById("design");
 selectDesign.addEventListener("change", () => {
-  // Enable color selection and select the first option.
+  // Enable color selection and select the first color option by default.
   selectColor.removeAttribute("disabled");
   selectColor.value = document.querySelector(`option[data-theme="${selectDesign.value}"]`).value;
 
@@ -71,22 +71,36 @@ function updatePayment() {
   methods.forEach(method => showOrHide(method, method.id === selectPayment.value));
 }
 
-// Checkbox focus state.
+// Visible focus state for checkboxes.
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 checkboxes.forEach(checkbox => {
   checkbox.addEventListener("focus", checkboxFocusHandler);
   checkbox.addEventListener("blur", checkboxBlurHandler);
 });
 
+/**
+ * Add a visible focus state to a checkbox input field.
+ * @param {object} event - The event object.
+ * @returns {undefined}
+ */
 function checkboxFocusHandler(event) {
   event.target.closest("label").classList.add("focus");
 }
 
+/**
+ * Remove a visible focus state from a checkbox input field.
+ * @param {object} event - The event object.
+ * @returns {undefined}
+ */
 function checkboxBlurHandler(event) {
   event.target.closest("label").classList.remove("focus");
 }
 
-// Conditional error messages.
+/**
+ * Regular expressions to test the name and email input, indentify the reason validation has failed
+ * and show a hint how to solve it.
+ * @see RequiredField.updateHint
+ */
 const fieldErrors = {
   name: [
     {
@@ -283,7 +297,10 @@ class RequiredField {
   }
 }
 
-// Arguments for the RequiredField's constructor.
+/**
+ * Arguments for the RequiredField's constructor.
+ * @see RequiredField
+ */
 const constructorArgs = {
   name: {
     id: "name",
