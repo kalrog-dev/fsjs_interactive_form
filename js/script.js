@@ -244,19 +244,19 @@ class RequiredField {
    * @param {object} event - The event object.
    */
   disableConflictingActivity(event) {
-  const target = event.target.closest('input[type="checkbox"]')
-  const targetTime = target.dataset.dayAndTime;
-  [...checkboxes]
-    .filter(checkbox => targetTime === checkbox.dataset.dayAndTime && target !== checkbox)
-    .forEach(checkbox => {
-      if (target.checked) {
-        checkbox.setAttribute("disabled", "")
-        checkbox.closest("label").classList.add("disabled");
-      } else {
-        checkbox.removeAttribute("disabled")
-        checkbox.closest("label").classList.remove("disabled");
-      }
-    });
+    const target = event.target.closest('input[type="checkbox"]')
+    const targetTime = target.dataset.dayAndTime;
+    [...checkboxes]
+      .filter(checkbox => targetTime === checkbox.dataset.dayAndTime && target !== checkbox)
+      .forEach(checkbox => {
+        if (target.checked) {
+          checkbox.setAttribute("disabled", "")
+          checkbox.closest("label").classList.add("disabled");
+        } else {
+          checkbox.removeAttribute("disabled")
+          checkbox.closest("label").classList.remove("disabled");
+        }
+      });
   }
 }
 
@@ -270,7 +270,7 @@ const cvv = new RequiredField("cvv", /^\d{3}$/);
 const requiredFields = [nameField, emailField, activities, cardNum, zip, cvv];
 
 /**
- * Invoke the validate method of all required fields. This also shows visual clues.
+ * Invoke the validate method of all required fields. This includes visual validation and showing a hint.
  * @returns {boolean} The validation result.
  */
 function validateAll() {
