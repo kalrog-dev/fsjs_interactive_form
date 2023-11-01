@@ -8,6 +8,7 @@ This is my project 3 solution in the Treehouse FSJS techdegree. Below is a list 
 | Conditional errors     | Run tests for the name and email input and display a hint to pass the validation |
 | Conflicting activities | Disable options with conflicting times                                           |
 | JSDoc documentation    | Most functions are documented with JSDoc                                         |
+| Object-oriented JS     | A carefully designed class results in application of the DRY principle           |
 
 Preview: 
 ![Interactive Form](./img/fsjs_interactive_form.png)
