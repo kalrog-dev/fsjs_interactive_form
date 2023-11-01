@@ -338,11 +338,11 @@ function validateAll() {
   return validation.every(isValid => isValid === true);
 }
 
-// Form validation on submit.
+// Form validation on submit. Reload the page if successful instead of form.submit().
 const form = document.querySelector("form");
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  validateAll() && form.submit();
+  validateAll() && window.location.reload();
 });
 
 // Form validation on input or change.
