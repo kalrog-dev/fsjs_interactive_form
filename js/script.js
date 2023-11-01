@@ -1,3 +1,10 @@
+/**
+ * @file FSJS project 3 / Interactive Form
+ * @version 1.0.0
+ * @author Michal Veselka
+ * {@link https://github.com/kalrog-dev}
+ */
+
 // Set focus on the name field by default.
 document.querySelector('input[type="text"]').focus();
 
@@ -260,14 +267,50 @@ class RequiredField {
   }
 }
 
-// Create instances for all required fields.
-const nameField = new RequiredField("name", /^(?=.*[a-z])[a-z\s]*$/i);
-const emailField = new RequiredField("email", /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i);
-const activities  = new RequiredField("activities-box", undefined);
-const cardNum = new RequiredField("cc-num", /^\d{13,16}$/);
-const zip = new RequiredField("zip", /^\d{5}$/);
-const cvv = new RequiredField("cvv", /^\d{3}$/);
-const requiredFields = [nameField, emailField, activities, cardNum, zip, cvv];
+// Arguments for the RequiredField's constructor.
+const requiredFieldsArguments = {
+  name: {
+    id: "name",
+    regex: /^(?=.*[a-z])[a-z\s]*$/i
+  },
+  email: {
+    id: "email",
+    regex: /^(?!.*[#$%&~!])[^@\s]+@[^@\s]+\.[a-z]+$/i
+  },
+  activities: {
+    id: "activities-box",
+    regex: undefined
+  },
+  cardNum: {
+    id: "cc-num",
+    regex: /^\d{13,16}$/
+  },
+  zip: {
+    id: "zip",
+    regex: /^\d{5}$/
+  },
+  cvv: {
+    id: "cvv",
+    regex: /^\d{3}$/
+  },
+};
+
+/**
+ * Create an instance of each required field.
+ * @returns {RequiredField[]} Array of required field instances.
+*/
+function createInstances() {
+  const instancesArr = [];
+  const fields = Object.values(requiredFieldsArguments);
+  for (let field of fields) {
+    const { id, regex } = field;
+    instancesArr.push(new RequiredField(id, regex));
+  }
+  return instancesArr;
+}
+
+// Create and store the instances
+const requiredFields = createInstances();
 
 /**
  * Invoke the validate method of all required fields. This includes visual validation and showing a hint.
