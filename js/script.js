@@ -1,6 +1,5 @@
 /**
- * @file FSJS project 3 / Interactive Form
- * @version 1.0.0
+ * @file Interactive form with validation.
  * @author Michal Veselka
  * {@link https://github.com/kalrog-dev}
  */
@@ -26,8 +25,9 @@ selectColor.setAttribute("disabled", "");
 // If t-shirt design is selected.
 const selectDesign = document.getElementById("design");
 selectDesign.addEventListener("change", () => {
-  // Enable color selection.
+  // Enable color selection and select the default option.
   selectColor.removeAttribute("disabled");
+  selectColor.value = "Select a design theme above";
 
   // Update color selection options based on design select value.
   [...document.querySelectorAll("option[data-theme]")].forEach(option => {
@@ -268,7 +268,7 @@ class RequiredField {
 }
 
 // Arguments for the RequiredField's constructor.
-const requiredFieldsArguments = {
+const constructorArgs = {
   name: {
     id: "name",
     regex: /^(?=.*[a-z])[a-z\s]*$/i
@@ -300,16 +300,16 @@ const requiredFieldsArguments = {
  * @returns {RequiredField[]} Array of required field instances.
 */
 function createInstances() {
-  const instancesArr = [];
-  const fields = Object.values(requiredFieldsArguments);
+  const instances = [];
+  const fields = Object.values(constructorArgs);
   for (let field of fields) {
     const { id, regex } = field;
-    instancesArr.push(new RequiredField(id, regex));
+    instances.push(new RequiredField(id, regex));
   }
-  return instancesArr;
+  return instances;
 }
 
-// Create and store the instances
+// Create and store all the required field instances.
 const requiredFields = createInstances();
 
 /**
@@ -317,9 +317,9 @@ const requiredFields = createInstances();
  * @returns {boolean} The validation result.
  */
 function validateAll() {
-  let validation = [];
+  const validation = [];
   requiredFields.forEach(field => validation.push(field.validate()));
-  return validation.every(isValidTest => isValidTest === true);
+  return validation.every(isValid => isValid === true);
 }
 
 // Form validation on submit.
@@ -329,7 +329,7 @@ form.addEventListener("submit", (event) => {
   validateAll() && form.submit();
 });
 
-// Real-time error messages for the required fields.
+// Form validation on input or change.
 requiredFields.forEach(field => {
   const eventToListenFor = field.id !== "activities-box" ? "input" : "change";
   field.getElement().addEventListener(eventToListenFor, (event) => field.eventHandler(event, field));
