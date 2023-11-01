@@ -16,7 +16,7 @@ const selectJob = document.getElementById("title");
 selectJob.addEventListener("change", () => showOrHide(otherJob, selectJob.value === "other"));
 
 /**
- * Display or hide an element based on a condition.
+ * Display or hide an input element or a payment section.
  * @param {HTMLInputElement|HTMLDivElement} element - Reference to the element to display or hide.
  * @param {boolean} condition - Condition to display the element.
  * @returns {undefined}
@@ -25,11 +25,11 @@ function showOrHide(element, condition) {
   element.style.display = condition ? "inherit" : "none";
 }
 
-// Disable t-shirt color selection by default.
+// Disable color selection by default.
 const selectColor = document.getElementById("color");
 selectColor.setAttribute("disabled", "");
 
-// If t-shirt design is selected.
+// If design is selected.
 const selectDesign = document.getElementById("design");
 selectDesign.addEventListener("change", () => {
   // Enable color selection and select the default option.
