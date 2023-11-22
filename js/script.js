@@ -19,7 +19,7 @@ selectJob.addEventListener("change", () => showOrHide(otherJob, selectJob.value 
  * Display or hide an input element or a payment section.
  * @param {HTMLInputElement|HTMLDivElement} element - Reference to the element to display or hide.
  * @param {boolean} condition - Condition to display the element.
- * @returns {undefined}
+ * @returns {void}
  */
 function showOrHide(element, condition) {
   element.style.display = condition ? "inherit" : "none";
@@ -48,7 +48,7 @@ document.getElementById("activities").addEventListener("change", updateTotal);
 /**
  * Update the total cost of activities.
  * @param {object} event - The event object.
- * @returns {undefined}
+ * @returns {void}
  */
 function updateTotal(event) {
   const checkbox = event.target.closest('input[type="checkbox"]');
@@ -81,7 +81,7 @@ checkboxes.forEach(checkbox => {
 /**
  * Add a visible focus state to a checkbox input field.
  * @param {object} event - The event object.
- * @returns {undefined}
+ * @returns {void}
  */
 function checkboxFocusHandler(event) {
   event.target.closest("label").classList.add("focus");
@@ -90,7 +90,7 @@ function checkboxFocusHandler(event) {
 /**
  * Remove a visible focus state from a checkbox input field.
  * @param {object} event - The event object.
- * @returns {undefined}
+ * @returns {void}
  */
 function checkboxBlurHandler(event) {
   event.target.closest("label").classList.remove("focus");
@@ -112,7 +112,7 @@ const fieldErrors = {
       hint: "Name may only contain letters or whitespaces"
     },
     {
-      test: undefined,
+      test: null,
       hint: "Name must be formatted correctly"
     }
   ],
@@ -142,7 +142,7 @@ const fieldErrors = {
       hint: "Top-level domain may only contain letters"
     },
     {
-      test: undefined,
+      test: null,
       hint: "Email address must be formatted correctly"
     }
   ]
@@ -153,7 +153,7 @@ class RequiredField {
   /**
    * Create a required field.
    * @param {string} id - Element's id without the # symbol.
-   * @param {RegExp|undefined} regex - Regular expression to validate a field.
+   * @param {?RegExp} regex - Regular expression to validate a field.
    */
   constructor(id, regex) {
     this.id = id;
@@ -165,7 +165,7 @@ class RequiredField {
    * validation for activities.
    * @param {object} event - The event object.
    * @param {RequiredField} field - An instance of the RequiredField.
-   * @returns {undefined}
+   * @returns {void}
    */
   eventHandler(event, field) {
     field.validate();
@@ -190,7 +190,7 @@ class RequiredField {
    * Test input field's value with regular expressions to identify the reason validation has failed 
    * and display a corresponding hint.
    * @see fieldErrors
-   * @returns {undefined}
+   * @returns {void}
    */
   updateHint() {
     if (this.id !== "name" && this.id !== "email") {
@@ -203,7 +203,7 @@ class RequiredField {
       const regex = error.test;
       const hintText = error.hint;
       // Break out of the loop if the error is identified.
-      if (regex.test(field.value) || regex === "undefined") {
+      if (regex.test(field.value) || regex === "null") {
         hint.textContent = hintText;
         return false;
       }
@@ -215,7 +215,7 @@ class RequiredField {
   /**
    * Toggle classes to apply the success or error styles. 
    * @param {boolean} isValid - The result of the field's validation.
-   * @returns {undefined}
+   * @returns {void}
    */
   visualValidation(isValid) {
     const parent = this.getParentElement();
@@ -278,7 +278,7 @@ class RequiredField {
   /**
    * Disable or enable activities that occur at the same time.
    * @param {object} event - The event object.
-   * @returns {undefined}
+   * @returns {void}
    */
   disableConflictingActivity(event) {
     const target = event.target.closest('input[type="checkbox"]')
@@ -312,7 +312,7 @@ const constructorArgs = {
   },
   activities: {
     id: "activities-box",
-    regex: undefined
+    regex: null
   },
   cardNum: {
     id: "cc-num",
